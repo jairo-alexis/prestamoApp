@@ -13,7 +13,7 @@
   <body>
       <div class="container">
         <h1>Hello, world!</h1>
-        @yield('contenido');
+        @yield('contenido')
      </div>
 
     <!-- Optional JavaScript; choose one of the two! -->

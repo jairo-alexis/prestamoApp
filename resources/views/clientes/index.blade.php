@@ -29,8 +29,12 @@
             <td> {{$cliente->created_at}} </td>
             <td> {{$cliente->created_at}} </td>
             <td>
-                <a class="btn btn-info">Editar</a>
-                <a class="btn btn-danger">Borrar</a>
+                <form action="/clientes/{{ $cliente->id }}" method="post">
+                    <a href="clientes/{{ $cliente->id }}/edit" class="btn btn-info">Editar</a>
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Borrar</button>
+                </form>
             </td>
         </tr>
         @endforeach
