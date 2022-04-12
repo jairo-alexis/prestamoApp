@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use Carbon\Carbon;
 
 class ClienteController extends Controller
 {
@@ -12,6 +13,12 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // constructor para agregar la autentication requerida
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum', 'verified']);
+    }
+
     public function index()
     {
         $clientes =Cliente::All();
@@ -26,7 +33,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        //
+        return view('clientes.crear');
     }
 
     /**
@@ -37,7 +44,20 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $cliente = new Cliente();
+        //2. capturar los valores enviandos desde el formulacion con la clase
+        $cliente->name = $request->get('nombre');
+        $cliente->apellido = $request->get('apellido');
+        $cliente->email = $request->get('email');
+        $cliente->profile_photo_path = $request->get('foto');
+        $cliente->updated_at = Carbon::now();
+
+        //2. guardar los datos en la bd
+        $cliente->save();
+
+        //3. Redireccionar al controlador
+        return redirect('/clientes');
+
     }
 
     /**
@@ -49,6 +69,7 @@ class ClienteController extends Controller
     public function show($id)
     {
         //
+
     }
 
     /**
@@ -59,7 +80,12 @@ class ClienteController extends Controller
      */
     public function edit($id)
     {
-        //
+        //1. Buscar en la bd el ID que va a editar
+        $cliente =Cliente::find($id);
+        //$cliente = Cliente::find($id);
+
+        return view('clientes.edit')->with('cliente', $cliente);
+
     }
 
     /**
@@ -71,7 +97,21 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //1. Buscar el Id en la bd que se va a modificar
+        $cliente = Cliente::find($id);
+        //2. capturar los valores enviandos desde el formulacion con la clase
+        $cliente->name = $request->get('nombre');
+        $cliente->apellido = $request->get('apellido');
+        $cliente->email = $request->get('email');
+        $cliente->profile_photo_path = $request->get('foto');
+        $cliente->updated_at = Carbon::now();
+
+        //2. guardar los datos en la bd
+        $cliente->save();
+
+        //3. Redireccionar al controlador
+        return redirect('/clientes');
+
     }
 
     /**
@@ -82,6 +122,16 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+       // echo "Estas eliminando algo". $id;
+
+        //1. Buscar el Id en la bd que se va a eliminar
+        $cliente = Cliente::find($id);
+        //2. capturar los valores enviandos desde el formulacion con la clase
+        $cliente->delete();
+        //3. Redireccionar a la vista
+        return redirect('/clientes');
+
+
     }
 }
